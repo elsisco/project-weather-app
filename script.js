@@ -22,28 +22,20 @@ const image = document.getElementById("imageButton");
 
 const getWeather = (data) => {
   const temperature = Math.round(data.main.temp * 10) / 10;
-  const sunrise = new Date(data.sys.sunrise * 1000).getHours().toLocaleString();
+  // Sunrise
   const sunriseHours = new Date(data.sys.sunrise * 1000)
     .getHours()
     .toLocaleString();
   const sunriseMinutes = new Date(data.sys.sunrise * 1000)
     .getMinutes()
     .toLocaleString();
-  const sunriseSeconds = new Date(data.sys.sunrise * 1000)
-    .getSeconds()
-    .toLocaleString();
-  console.log(sunrise);
-  const sunset = new Date(data.sys.sunset * 1000).toLocaleString();
+  // Sunset
   const sunsetHours = new Date(data.sys.sunset * 1000)
     .getHours()
     .toLocaleString();
   const sunsetMinutes = new Date(data.sys.sunset * 1000)
     .getMinutes()
     .toLocaleString();
-  const sunsetSeconds = new Date(data.sys.sunset * 1000)
-    .getSeconds()
-    .toLocaleString();
-  console.log(data.sys.sunset);
 
   currentWeather.innerHTML += `<h3 class="current-statements">${data.weather[0].main} | ${temperature}°</h3>`;
   currentWeather.innerHTML += `<h3 class="current-statements">sunrise 0${sunriseHours}.${sunriseMinutes}</h3>`;
