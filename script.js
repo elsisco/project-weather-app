@@ -8,7 +8,7 @@ const API_URL_NEW_YORK = 'https://api.openweathermap.org/data/2.5/weather?q=San%
 const API_URL_FORECAST_NEW_YORK = 'https://api.openweathermap.org/data/2.5/forecast?q=San%20Jose,CR&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
 
 const body = document.getElementById('body')
-const weatherContainer = document.getElementById('weather-container')
+const weatherContainer = document.getElementById('weatherContainer')
 const currentWeather = document.getElementById('currentWeatherSunrise')
 const cityName = document.getElementById('cityName')
 const weatherForecast = document.getElementById('weatherForecast')
@@ -23,7 +23,7 @@ const chosenCity = document.getElementById('chosen-city')
 let city = 'Stockholm'
 
 const getWeather = (data) => {
-    console.log(data)
+    // console.log(data)
     const timezoneOffset = new Date().getTimezoneOffset() * 60
     const sunrise = data.sys.sunrise + data.timezone + timezoneOffset
     const sunset = data.sys.sunset + data.timezone + timezoneOffset
@@ -94,6 +94,8 @@ const getWeather = (data) => {
     changeRecommendation()
 }
 
+// WORK IN PROGRESS...
+
 // const getForecast = (data) => {
 //     const tempForecast = data.list.filter((item) =>
 //         item.dt_txt.includes('12:00:00')
@@ -157,7 +159,7 @@ const getForecast = (data) => {
     ); // array
 
     const tempForecastFiveDays = tempForecast.map((listItem) => {
-        console.log(listItem.main.temp);
+        // console.log(listItem.main.temp);
         const dateVariable = new Date(listItem.dt * 1000).getDay(); // gives us 2 as today is tuesday
         const now = new Date().getDay()
         const isToday = dateVariable === now
@@ -165,12 +167,14 @@ const getForecast = (data) => {
         const weekdayName = arrayOfWeekdays[dateVariable]; //arrayofWeekdays[2]
         if (!isToday) {
             return (weatherForecast.innerHTML += /*html*/ `
-                <div class="week-wrap">
-                    <div class="week-day">
-                        <h1> ${weekdayName}</h1>
-                    </div> 
-                    <div class="week-temp">
-                        <h1>${Math.round(listItem.main.temp)}°</h1>
+                <div class="week-wrap-container">
+                    <div class="week-wrap">
+                        <div class="week-day">
+                            <h1> ${weekdayName}</h1>
+                        </div> 
+                        <div class="week-temp">
+                            <h1>${Math.round(listItem.main.temp)}°</h1>
+                        </div>
                     </div>
                 </div>
             `)
@@ -243,7 +247,12 @@ const fetchWeather = () => {
         .then((data) => {
             getWeather(data)
         })
-        .catch((error) => console.error('error', error))
+        .catch(error => {
+            console.error('Error: ', error)
+            // weatherContainer.innerHTML = /*html*/ `
+            //     <div class="error-text">Ooops! Please try again.<br><br>If the city you searched for is not in the country you intended try typing the country code as well, for example 'Melbourne, AU'.</div>
+            // `
+        })
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=${API_KEY}`)
         .then((response) => response.json())
         .then((data) => {
@@ -255,7 +264,7 @@ const fetchWeather = () => {
 }
 
 const changeCity = () => {
-    console.log(chosenCity.value)
+    // console.log(chosenCity.value)
     city = chosenCity.value
     fetchWeather()
     chosenCity.value = ''
@@ -265,7 +274,7 @@ searchButton.addEventListener('click', () => {
     changeCity()
 })
 
-searchButton.addEventListener('keyup', (event) => {
+chosenCity.addEventListener('keyup', (event) => {
     if (event.key === 'Enter') {
         changeCity()
     }
