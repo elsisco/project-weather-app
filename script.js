@@ -249,9 +249,9 @@ const fetchWeather = () => {
         })
         .catch(error => {
             console.error('Error: ', error)
-            // weatherContainer.innerHTML = /*html*/ `
-            //     <div class="error-text">Ooops! Please try again.<br><br>If the city you searched for is not in the country you intended try typing the country code as well, for example 'Melbourne, AU'.</div>
-            // `
+            weatherForecast.innerHTML = /*html*/ `
+                <div class="error-text">Ooops! Please try again.<br><br>If the city you searched for is not in the country you intended try typing the country code as well, for example 'Melbourne, AU'.</div>
+            `
         })
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=${API_KEY}`)
         .then((response) => response.json())
