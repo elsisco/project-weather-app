@@ -16,4 +16,4 @@ If we had some more time, we would display cities from other time zones as well 
 
 ## View it live
 
-https://weatherapp-turtles-group2.netlify.app/ 
+https://silly-lovelace-55575c.netlify.app/
