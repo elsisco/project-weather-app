@@ -18,8 +18,9 @@ body {
 
 .current-statements {
   margin: 0px;
-  font-weight: 300;
-  font-size: 21px;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 25px;
 }
 .wrapper {
   margin-top: 30px;
@@ -32,32 +33,45 @@ body {
 
 .city img {
   padding-bottom: 20px;
-  max-width: 90px;
+  max-width: 85px;
+  max-height: 85px;
 }
 
 .city h1 {
   margin: 0;
-  font-size: 37px;
+  font-size: 30px;
 }
 
 .week-wrap {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   border-bottom: 2px dotted;
-  line-height: 3px;
+  height: 40px;
 }
 .week-wrap h1 {
-  font-weight: 300;
-  font-size: 21px;
+  font-weight: 400;
+  font-size: 17px;
 }
+
+/* .week-temp {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 75px;
+} */
 
 .button-cities {
   background-repeat: no-repeat;
   border: none;
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   margin-top: 30px;
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 /* Color themes for different kinds of weather */
@@ -77,14 +91,95 @@ body {
   background-color: #F4F7F8;
 }
 
+.snow {
+  color: #6C2E88;
+  background-color: #E9E0E7;
+}
+
 .unpredictable {
   color: #862C4D;
   background-color: #BFE2E0;
 }
 
+
+/* Search field & button */
+
+footer {
+  margin: 20px 30px;
+}
+
+input {
+  background: transparent;
+  height: 20px;
+  width: 165px;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  border: 2px solid;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.cloudy input, .cloudy input::placeholder {
+  color: #F47775;
+}
+
+.rainy input, .rainy input::placeholder {
+  color: #164A68;
+}
+
+.sunny input, .sunny input::placeholder {
+  color:  #2A5510;
+}
+
+.snow input, .snow input::placeholder {
+  color:  #6C2E88;
+}
+
+.unpredictable input, .unpredictable input::placeholder {
+  color: #862C4D;
+}
+
+button {
+  color: white;
+  height: 32px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  border-radius: 4px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+}
+
+.sunny button {
+  background:  #2A5510;
+  color: #f7e9b9;
+}
+
+.rainy button {
+  background: #164A68;
+  color: #A3DEF7;
+}
+
+.cloudy button {
+  background: #F47775;
+  color: #F4F7F8;
+}
+
+.snow button {
+  background-color: #6C2E88;
+  color: #E9E0E7;
+}
+
+.unpredictable  button {
+  background-color: #862C4D;
+  color: #BFE2E0;
+}
+
 @media (min-width: 768px) {
-  .weather-cont {
-    width: 70%;
-    margin: 0px auto;
+  .weather-cont,
+  footer {
+    max-width: 450px;
+    margin: 35px auto;
   }
 }

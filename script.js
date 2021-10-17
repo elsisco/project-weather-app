@@ -1,82 +1,155 @@
-const API_URL_STOCKHOLM =
-    "https://api.openweathermap.org/data/2.5/weather?q=Stockholm,Sweden&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22";
-const API_URL_BERLIN =
-    "https://api.openweathermap.org/data/2.5/weather?q=Berlin,Germany&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22";
-const API_URL_COPENHAGEN =
-    "https://api.openweathermap.org/data/2.5/weather?q=Copenhagen,Germany&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22";
-const API_URL_FORECAST_STOCKHOLM =
-    "https://api.openweathermap.org/data/2.5/forecast?q=Stockholm,Sweden&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22";
-const API_URL_FORECAST_BERLIN =
-    "https://api.openweathermap.org/data/2.5/forecast?q=Berlin,Germany&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22";
-const API_URL_FORECAST_COPENHAGEN =
-    "https://api.openweathermap.org/data/2.5/forecast?q=Copenhagen,Sweden&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22";
+const API_URL_STOCKHOLM = 'https://api.openweathermap.org/data/2.5/weather?q=stockholm&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+const API_URL_FORECAST_STOCKHOLM = 'https://api.openweathermap.org/data/2.5/forecast?q=stockholm&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
 
-const body = document.getElementById("body");
-const weatherContainer = document.getElementById("weather-container");
-const currentWeather = document.getElementById("currentWeatherSunrise");
-const cityName = document.getElementById("cityName");
-const weatherForecast = document.getElementById("weatherForecast");
-const buttonCity = document.getElementById("button");
-const image = document.getElementById("imageButton");
+const API_URL_ATHENS = 'https://api.openweathermap.org/data/2.5/weather?q=athens&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+const API_URL_FORECAST_ATHENS = 'https://api.openweathermap.org/data/2.5/forecast?q=athens&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+
+const API_URL_NEW_YORK = 'https://api.openweathermap.org/data/2.5/weather?q=San%20Jose,CR&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+const API_URL_FORECAST_NEW_YORK = 'https://api.openweathermap.org/data/2.5/forecast?q=San%20Jose,CR&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+
+const body = document.getElementById('body')
+const weatherContainer = document.getElementById('weather-container')
+const currentWeather = document.getElementById('currentWeatherSunrise')
+const cityName = document.getElementById('cityName')
+const weatherForecast = document.getElementById('weatherForecast')
+const buttonCity = document.getElementById('button')
+const image = document.getElementById('imageButton')
+
+const API_KEY = '7678391e67f390dcfc1cc2681209fd22'
+
+const searchButton = document.getElementById('city-search-button')
+const chosenCity = document.getElementById('chosen-city')
+
+let city = 'Stockholm'
 
 const getWeather = (data) => {
-    const temperature = Math.round(data.main.temp * 10) / 10;
-    // Sunrise
-    const sunriseHours = new Date(data.sys.sunrise * 1000)
-        .getHours();
-    const sunriseMinutes = new Date(data.sys.sunrise * 1000)
-        .getMinutes();
-    // Sunset
-    const sunsetHours = new Date(data.sys.sunset * 1000)
-        .getHours();
-    const sunsetMinutes = new Date(data.sys.sunset * 1000)
-        .getMinutes();
+    console.log(data)
+    const timezoneOffset = new Date().getTimezoneOffset() * 60
+    const sunrise = data.sys.sunrise + data.timezone + timezoneOffset
+    const sunset = data.sys.sunset + data.timezone + timezoneOffset
+    let description = data.weather[0].description
 
-    currentWeather.innerHTML += `<h3 class="current-statements">${data.weather[0].main} | ${temperature}°</h3>`;
-    currentWeather.innerHTML += `<h3 class="current-statements">sunrise 0${sunriseHours}.${sunriseMinutes}</h3>`;
-    currentWeather.innerHTML += `<h3 class="current-statements">sunset ${sunsetHours}.${sunsetMinutes}</h3>`;
-    currentWeather.innerHTML += `<h3 class="current-statements">wind ${Math.round(data.wind.speed)} m/s</h3>`
-    const changeRecomendation = () => {
-        if (data.weather[0].main === "Clear") {
+    // Conversion of the first letter in description to be a uppercase.
+    description = description.charAt(0).toUpperCase() + description.slice(1)
+
+    // Converter for sunrise & sunset time to wanted format
+    const convert = (t) => {
+        const dt = new Date(t * 1000)
+        const hr = '0' + dt.getHours()
+        const m = '0' + dt.getMinutes()
+        return hr.substr(-2) + '.' + m.substr(-2)
+      };
+
+    const sunriseTime = convert(sunrise)
+    const sunsetTime = convert(sunset)
+    
+    currentWeather.innerHTML += /*html*/ `
+        <h3 class='current-statements'>${description} | ${Math.round(data.main.temp)}°</h3>
+        <h3 class='current-statements'>Wind ${Math.round(data.wind.speed)} m/s</h3>
+        <h3 class='current-statements'>Sunrise ${sunriseTime}</h3>
+        <h3 class='current-statements'>Sunset ${sunsetTime}</h3>
+    `
+    
+    const changeRecommendation = () => {
+        body.classList.remove(...body.classList)
+        if (data.weather[0].main === 'Clear') {
             cityName.innerHTML += /*html*/ `
-                <img src="/Designs/Design-2/icons/noun_Sunglasses_2055147.svg" alt="Sunglasses icon">
-                <h1>Get your sunnies on.</h1>
-                <h1>${data.name} is looking rather great today.</h1>
-                `;
-            body.classList.add('sunny');
-            buttonCity.style.background =
-                'url("/Designs/buttons_weatherapp/button_sunny.svg")';
-        } else if (data.weather[0].main === "Rain") {
+                <img src='assets/icons/icon-sunny.svg' alt='Sunglasses'>
+                <h1>Get your sunnies on. ${data.name} [${data.sys.country}] is looking rather great today.</h1>
+            `
+            body.classList.add('sunny')
+            buttonCity.style.background = 'url("assets/buttons/button_sunny.svg")'
+        } else if (data.weather[0].main === 'Rain' || data.weather[0].main === 'Drizzle') {
             cityName.innerHTML += /*html*/ `
-                <img src="/Designs/Design-2/icons/noun_Umbrella_2030530.svg" alt="Rain icon"/>
-                <h1>Don't forget your umbrella. </h1>
-                <h1>It's wet in ${data.name} today.</h1>
-                `;
-            body.classList.add('rainy');
+                <img src='assets/icons/icon-umbrella.svg' alt='Umbrella'/>
+                <h1>Don't forget your umbrella. It's wet in ${data.name} [${data.sys.country}] today.</h1>
+            `
+            body.classList.add('rainy')
             buttonCity.style.background =
-                'url("/Designs/buttons_weatherapp/button_rain.svg")';
-        } else if (data.weather[0].main === "Clouds") {
+                'url("assets/buttons/button_rain.svg")'
+        } else if (data.weather[0].main === 'Clouds') {
             cityName.innerHTML += /*html*/ `
-                <img src="/Designs/Design-2/icons/noun_Cloud_1188486.svg" alt="Clound icon"/>
-                <h1>Light a fire and get cosy. </h1>
-                <h1>${data.name} is looking grey today.</h1>
-                `;
-            body.classList.add('cloudy');
-            buttonCity.style.background =
-                'url("/Designs/buttons_weatherapp/button_clouds.svg")';
+                <img src='assets/icons/icon-cloud.svg' alt='Clound'/>
+                <h1>${data.name} [${data.sys.country}] is looking grey today. Do something fun to brighten it up!</h1>
+            `
+            body.classList.add('cloudy')
+            buttonCity.style.background = 'url("assets/buttons/button_clouds.svg")'
+        } else if (data.weather[0].main === 'Snow') {
+            cityName.innerHTML += /*html*/ `
+                <img src='assets/icons/icon-snowflake.svg' alt='Snowflake'/>
+                <h1>Light a fire and get cozy. It's snowing in ${data.name} [${data.sys.country}] today.</h1>
+            `
+            body.classList.add('snow')
+            buttonCity.style.background = 'url("assets/buttons/button_snow.svg")'
         } else {
             cityName.innerHTML += /*html*/ `
-                <img src="/Designs/Design-2/icons/noun_Other_862C4D.svg" alt="Unpredictable weather icon"/>
-                <h1>Prepare for everything! </h1>
-                <h1>${data.name} is unpredictable today.</h1>
-                `;
-            body.classList.add('unpredictable');
-            buttonCity.style.background =
-                'url("/Designs/buttons_weatherapp/button_other.svg")';
+                <img src='assets/icons/icon-unpredictable.svg' alt='Unpredictable weather icon'/>
+                <h1>Prepare for everything! ${data.name} [${data.sys.country}] is unpredictable today.</h1>
+            `
+            body.classList.add('unpredictable')
+            buttonCity.style.background = 'url("assets/buttons/button_other.svg")'
         }
-    };
-    changeRecomendation();
-};
+        description = description.charAt(0).toUpperCase() + description.slice(1)
+    }
+    changeRecommendation()
+}
+
+// const getForecast = (data) => {
+//     const tempForecast = data.list.filter((item) =>
+//         item.dt_txt.includes('12:00:00')
+//     )
+
+//     console.log(tempForecast);
+
+//     const tempForecastFiveDays = tempForecast.map((listItem) => {
+//         const dateVariable = new Date(listItem.dt * 1000).getDay()
+//         const now = new Date().getDay()
+//         const isToday = dateVariable === now
+//         const arrayOfWeekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+//         const weekdayName = arrayOfWeekdays[dateVariable]
+        // let maxTemp = 80
+        // let minTemp = -80
+        // let myDates = []
+
+        // myDates.forEach((element) => {
+        //     let weatherAt12 = data.list.filter((e) =>
+        //         e.dt_txt.includes('${element} 12:00:00')
+        //     );
+
+        //     console.log(weatherAt12)
+
+        //     let weatherDuringADay = data.list.filter((e) =>
+        //         e.dt_txt.includes(element)
+        //     );
+
+        //     weatherDuringADay.forEach((e) => {
+        //         if (e.main.temp_min < minTemp) {
+        //             minTemp = Math.round(e.main.temp_min)
+        //         } else if (e.main.temp_max > maxTemp) {
+        //             maxTemp = Math.round(e.main.temp_max)
+        //         }
+        //     })
+        // })
+
+//         if (!isToday) {
+//             weatherForecast.innerHTML += /*html*/ `
+//                 <div class='week-wrap'>
+//                     <div class='week-day'>
+//                         <h1> ${weekdayName} </h1>
+//                     </div>
+//                     <div class='week-temp'>
+//                         <div class='day-temp-max'>
+//                             <h1>${Math.round(maxTemp)}°</h1>
+//                         </div>
+//                         <div class='day-temp-min'>
+//                             <h1>${Math.round(minTemp)}°</h1>
+//                         </div>
+//                     </div>
+//                 </div>
+//             `
+//         }
+//     })
+// }
 
 const getForecast = (data) => {
     const tempForecast = data.list.filter((item) =>
@@ -91,91 +164,112 @@ const getForecast = (data) => {
         const arrayOfWeekdays = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
         const weekdayName = arrayOfWeekdays[dateVariable]; //arrayofWeekdays[2]
         if (!isToday) {
-            return (weatherForecast.innerHTML += `<div class="week-wrap"><div class="week-day"><h1> ${weekdayName} </h1></div> 
-      <div class="week-temp"><h1>${Math.round(
-                listItem.main.temp
-            )}°</h1></div></div>
-        `)
+            return (weatherForecast.innerHTML += /*html*/ `
+                <div class="week-wrap">
+                    <div class="week-day">
+                        <h1> ${weekdayName}</h1>
+                    </div> 
+                    <div class="week-temp">
+                        <h1>${Math.round(listItem.main.temp)}°</h1>
+                    </div>
+                </div>
+            `)
         };
     });
 };
 
-// const testWeatherStockholm = fetch(API_URL_STOCKHOLM);
-// const testForecastStockholm = fetch(API_URL_FORECAST_STOCKHOLM);
-// we tried to implement Promise.all, but then the fetch distroyed the button flow
-// const fetchWeatherStockholm = () => {
-//   // we tried but it did not work
-//   Promise.all([testWeatherStockholm, testForecastStockholm])
-//     .then((responses) => {
-//       console.log(responses);
-//       const arrayOfResponses = responses.map((responses) => responses.json());
-//       console.log(arrayOfResponses);
-//       return Promise.all(arrayOfResponses);
-//     })
-//     .then((data) => {
-//       console.log(data);
-//       getWeather(data[0]);
-//       getForecast(data[1]);
-//     });
-// };
 
 const fetchWeatherStockholm = () => {
     fetch(API_URL_STOCKHOLM)
         .then((response) => response.json())
         .then((data) => {
             getWeather(data)
-            console.log(data)
+            // console.log(data)
         })
-        .catch((error) => console.error("error", error));
+        .catch((error) => console.error('error', error))
     fetch(API_URL_FORECAST_STOCKHOLM)
         .then((response) => response.json())
         .then((data) => {
             getForecast(data)
-            console.log(data)
-        });
-};
+            // console.log(data)
+        })
+}
 
-const fetchWeatherBerlin = () => {
-    fetch(API_URL_BERLIN)
+const fetchWeatherAthens = () => {
+    fetch(API_URL_ATHENS)
         .then((response) => response.json())
-        .then((data) => getWeather(data));
-    fetch(API_URL_FORECAST_BERLIN)
+        .then((data) => getWeather(data))
+    fetch(API_URL_FORECAST_ATHENS)
         .then((response) => response.json())
-        .then((data) => getForecast(data));
-};
+        .then((data) => getForecast(data))
+}
 
-const fetchWeatherCopenhagen = () => {
-    fetch(API_URL_COPENHAGEN)
+const fetchWeatherNewYork = () => {
+    fetch(API_URL_NEW_YORK)
         .then((response) => response.json())
-        .then((data) => getWeather(data));
-    fetch(API_URL_FORECAST_COPENHAGEN)
+        .then((data) => getWeather(data))
+    fetch(API_URL_FORECAST_NEW_YORK)
         .then((response) => response.json())
-        .then((data) => getForecast(data));
-};
+        .then((data) => getForecast(data))
+}
 
-let click = 1;
+let click = 1
 
-buttonCity.addEventListener("click", () => {
+buttonCity.addEventListener('click', () => {
     if (click === 1) {
-        fetchWeatherBerlin();
-        click = 2;
-        currentWeather.innerHTML = "";
-        cityName.innerHTML = "";
-        weatherForecast.innerHTML = "";
+        fetchWeatherAthens()
+        click = 2
+        currentWeather.innerHTML = ''
+        cityName.innerHTML = ''
+        weatherForecast.innerHTML = ''
     } else if (click === 2) {
-        fetchWeatherCopenhagen();
-        click = 3;
-        currentWeather.innerHTML = "";
-        cityName.innerHTML = "";
-        weatherForecast.innerHTML = "";
+        fetchWeatherNewYork()
+        click = 3
+        currentWeather.innerHTML = ''
+        cityName.innerHTML = ''
+        weatherForecast.innerHTML = ''
     } else {
-        fetchWeatherStockholm();
-        currentWeather.innerHTML = "";
-        cityName.innerHTML = "";
-        weatherForecast.innerHTML = "";
-        click = 1;
+        fetchWeatherStockholm()
+        currentWeather.innerHTML = ''
+        cityName.innerHTML = ''
+        weatherForecast.innerHTML = ''
+        click = 1
     }
-});
+})
 
-// invoke the function when it starts
-fetchWeatherStockholm();
+const fetchWeather = () => {
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=${API_KEY}`)
+        .then((response) => response.json())
+        .then((data) => {
+            getWeather(data)
+        })
+        .catch((error) => console.error('error', error))
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=${API_KEY}`)
+        .then((response) => response.json())
+        .then((data) => {
+            getForecast(data)
+        })
+    currentWeather.innerHTML = ''
+    cityName.innerHTML = ''
+    weatherForecast.innerHTML = ''
+}
+
+const changeCity = () => {
+    console.log(chosenCity.value)
+    city = chosenCity.value
+    fetchWeather()
+    chosenCity.value = ''
+}
+
+searchButton.addEventListener('click', () => {
+    changeCity()
+})
+
+searchButton.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+        changeCity()
+    }
+})
+
+// start display
+fetchWeather()
