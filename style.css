@@ -46,7 +46,7 @@ body {
 .week-wrap {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   border-bottom: 2px dotted;
   height: 40px;
@@ -55,6 +55,19 @@ body {
 .week-wrap h1 {
   font-weight: 400;
   font-size: 17px;
+}
+
+.week-day {
+  width: 30%;
+}
+
+.week-day-description {
+  width: 60%;
+}
+
+.week-temp {
+  width: 10%;
+  text-align: right;
 }
 
 /* .week-temp {

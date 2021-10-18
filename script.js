@@ -166,14 +166,18 @@ const getForecast = (data) => {
         const dateVariable = new Date(listItem.dt * 1000).getDay(); // gives us 2 as today is tuesday
         const now = new Date().getDay()
         const isToday = dateVariable === now
-        const arrayOfWeekdays = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+        const arrayOfWeekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const weekdayName = arrayOfWeekdays[dateVariable]; //arrayofWeekdays[2]
+        console.log(listItem)
         if (!isToday) {
             return (weatherForecast.innerHTML += /*html*/ `
                 <div class="week-wrap-container">
                     <div class="week-wrap">
                         <div class="week-day">
                             <h1> ${weekdayName}</h1>
+                        </div> 
+                        <div class="week-day-description">
+                            <h1> ${listItem.weather[0].main}</h1>
                         </div> 
                         <div class="week-temp">
                             <h1>${Math.round(listItem.main.temp)}°</h1>
