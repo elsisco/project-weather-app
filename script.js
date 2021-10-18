@@ -4,8 +4,11 @@ const API_URL_FORECAST_STOCKHOLM = 'https://api.openweathermap.org/data/2.5/fore
 const API_URL_ATHENS = 'https://api.openweathermap.org/data/2.5/weather?q=athens&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
 const API_URL_FORECAST_ATHENS = 'https://api.openweathermap.org/data/2.5/forecast?q=athens&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
 
-const API_URL_NEW_YORK = 'https://api.openweathermap.org/data/2.5/weather?q=San%20Jose,CR&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
-const API_URL_FORECAST_NEW_YORK = 'https://api.openweathermap.org/data/2.5/forecast?q=San%20Jose,CR&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+const API_URL_SAN_JOSE = 'https://api.openweathermap.org/data/2.5/weather?q=San%20Jose,CR&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+const API_URL_FORECAST_SAN_JOSE = 'https://api.openweathermap.org/data/2.5/forecast?q=San%20Jose,CR&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+
+const API_URL_SAINT_PETERSBURG = 'https://api.openweathermap.org/data/2.5/weather?q=Saint%20Petersburg&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
+const API_URL_FORECAST_SAINT_PETERSBURG = 'https://api.openweathermap.org/data/2.5/forecast?q=Saint%20Petersburg&units=metric&APPID=7678391e67f390dcfc1cc2681209fd22'
 
 const body = document.getElementById('body')
 const weatherContainer = document.getElementById('weatherContainer')
@@ -17,8 +20,8 @@ const image = document.getElementById('imageButton')
 
 const API_KEY = '7678391e67f390dcfc1cc2681209fd22'
 
-const searchButton = document.getElementById('city-search-button')
-const chosenCity = document.getElementById('chosen-city')
+const searchButton = document.getElementById('citySearchButton')
+const chosenCity = document.getElementById('chosenCity')
 
 let city = 'Stockholm'
 
@@ -190,12 +193,10 @@ const fetchWeatherStockholm = () => {
             getWeather(data)
             // console.log(data)
         })
-        .catch((error) => console.error('error', error))
     fetch(API_URL_FORECAST_STOCKHOLM)
         .then((response) => response.json())
         .then((data) => {
             getForecast(data)
-            // console.log(data)
         })
 }
 
@@ -208,11 +209,20 @@ const fetchWeatherAthens = () => {
         .then((data) => getForecast(data))
 }
 
-const fetchWeatherNewYork = () => {
-    fetch(API_URL_NEW_YORK)
+const fetchWeatherSanJose = () => {
+    fetch(API_URL_SAN_JOSE)
         .then((response) => response.json())
         .then((data) => getWeather(data))
-    fetch(API_URL_FORECAST_NEW_YORK)
+    fetch(API_URL_FORECAST_SAN_JOSE)
+        .then((response) => response.json())
+        .then((data) => getForecast(data))
+}
+
+const fetchWeatherSaintPetersburg = () => {
+    fetch(API_URL_SAINT_PETERSBURG)
+        .then((response) => response.json())
+        .then((data) => getWeather(data))
+    fetch(API_URL_FORECAST_SAINT_PETERSBURG)
         .then((response) => response.json())
         .then((data) => getForecast(data))
 }
@@ -221,17 +231,23 @@ let click = 1
 
 buttonCity.addEventListener('click', () => {
     if (click === 1) {
-        fetchWeatherAthens()
+        fetchWeatherSaintPetersburg()
+        currentWeather.innerHTML = ''
+        cityName.innerHTML = ''
+        weatherForecast.innerHTML = ''
         click = 2
-        currentWeather.innerHTML = ''
-        cityName.innerHTML = ''
-        weatherForecast.innerHTML = ''
     } else if (click === 2) {
-        fetchWeatherNewYork()
-        click = 3
+        fetchWeatherAthens()
         currentWeather.innerHTML = ''
         cityName.innerHTML = ''
         weatherForecast.innerHTML = ''
+        click = 3
+    } else if (click === 3) {
+        fetchWeatherSanJose()
+        currentWeather.innerHTML = ''
+        cityName.innerHTML = ''
+        weatherForecast.innerHTML = ''
+        click = 4
     } else {
         fetchWeatherStockholm()
         currentWeather.innerHTML = ''
@@ -250,7 +266,8 @@ const fetchWeather = () => {
         .catch(error => {
             console.error('Error: ', error)
             weatherForecast.innerHTML = /*html*/ `
-                <div class="error-text">Ooops! Please try again.<br><br>If the city you searched for is not in the country you intended try typing the country code as well, for example 'Melbourne, AU'.</div>
+                <div class="error-text">Ooops! Please try again.</div>
+                <div class="search-instructions">If the city you searched for is not in the country you intended please submit the country code as well. For example, instead of writing <i>Melbourne</i> write <i>Melbourne, AU</i>.</div>
             `
         })
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=${API_KEY}`)
