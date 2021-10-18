@@ -28,8 +28,8 @@ body {
 
 .city {
   max-width: 95%;
-  margin-top: 50px;
-  margin-bottom: 20px;
+  margin-top: 40px;
+  margin-bottom: 25px;
 }
 
 .city img {
@@ -55,6 +55,8 @@ body {
 .week-wrap h1 {
   font-weight: 400;
   font-size: 17px;
+  margin-top: 18px;
+  margin-bottom: 14px;
 }
 
 .week-day {
@@ -62,11 +64,11 @@ body {
 }
 
 .week-day-description {
-  width: 60%;
+  width: 55%;
 }
 
 .week-temp {
-  width: 10%;
+  width: 15%;
   text-align: right;
 }
 
