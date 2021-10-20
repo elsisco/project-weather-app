@@ -87,7 +87,7 @@ const getWeather = (data) => {
         } else {
             cityName.innerHTML += /*html*/ `
                 <img src='assets/icons/icon-unpredictable.svg' alt='Unpredictable weather icon'/>
-                <h1>Prepare for everything! ${data.name} [${data.sys.country}] is unpredictable today.</h1>
+                <h1>Hold on to you hats. There will be <span class="lowercase">${data.weather[0].main}</span> in ${data.name} [${data.sys.country}] today.</h1>
             `
             body.classList.add('unpredictable')
             buttonCity.style.background = 'url("assets/buttons/button_other.svg")'

@@ -118,6 +118,10 @@ body {
   background-color: #BFE2E0;
 }
 
+.lowercase {
+  text-transform: lowercase;
+}
+
 
 /* Search field & button */
 
